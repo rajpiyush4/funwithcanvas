@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AV</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: black;
+            overflow: hidden;
+        }
+
+        #snail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            z-index: -1;
+        }
+
+        #snail path {
+            /* define no of slices that make up outline of each path, it defines what portion of the outline we want to show*/
+            stroke-dasharray: 1530;
+            /* it can be used to push that path around my path is made out of 1500 segment, it defines how much we want to push it in certain direction*/
+            stroke-dashoffset: 0;
+            animation: animationPath 5s infinite;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes animationPath {
+            0% {
+                stroke-dashoffset: 1520;
+            }
+
+            50% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: 1520;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" id="snail" data-name="Layer 1" viewBox="0 0 496.07 269.85">
+            <defs>
+                <style>
+                    .cls-1 {
+                        fill: none;
+                        stroke: url(#gradient);
+                        stroke-miterlimit: 10;
+                        stroke-width: 2;
+                    }
+                </style>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="100%" stop-color="magenta" />
+                </linearGradient>
+            </defs>
+            <path class="cls-1"
+                d="M416.48,101.23s-2.22-62.5,8.45-87.83c0,0-6.22-11.56,5.33-12.89,0,0,11.56,2.66,0,12.89,0,0-12.89,58.33,1.78,87.83,0,0,8-1.17,12.89,3.72,0,0,29.78-70.22,38.67-77.78,0,0-4-16,8.88-12.44,0,0,9.34,8-4.44,13.33,0,0-36,62.22-28.44,93.34,0,0,18.22,36.88-31.12,74.66s-25.27,54.22-12.19,59.56-14.92,19.55-36.69,11.11-34.67-10.22-62.67-5.78-39.11,2.22-63.11-3.11-23.56,7.56-44.45,7.56-43.55-4.45-56.89-10.67c0,0-19.11-2.22-41.33,6.67,0,0-25.33,0-43.11-9.34,0,0-15.56-1.78-29.33,6.22,0,0-30.23-.88-37.78-25.77,0,0-8.89-11.11,54.22-7.11,0,0,80-14.67,117.78-39.56s92.44-11.11,100.44-10.67S327.6,173,340,163.62s26.67-22.22,37.33-23.56S392.54,100.31,416.48,101.23Z" />
+            <path class="cls-1"
+                d="M432.63,157.45s-14.82,6.4-18.92,5.38-8.53-3.55-10,2.89,7.36,4.4,10.48,1.64,14.22-2.84,18.3.27" />
+            <path class="cls-1"
+                d="M456.72,164.49s15.1,1.78,19.3,5.41,7.73,8.15,11.57,3.66-1.76-7.57-7.4-6.83-18.74-6.83-19.43-10.62" />
+            <path class="cls-1" d="M430.26,187s-4-15-29-3.86S368.93,221.62,343.6,235s-40.89,27.39-60.78,28" />
+        </svg> -->
+
+        <canvas id="canvas"></canvas>
+
+    </div>
+    <script>
+        window.onload = () => {
+            // const container = document.querySelector("#container")
+            const canvas = document.querySelector("#canvas")
+            // const snail=document.querySelector('#snail')
+            const ctx = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+
+
+            // class Bar {
+            //     constructor(x, y, width, height, color, index) {
+            //         this.x = x
+            //         this.y = y
+            //         this.width = width
+            //         this.height = height
+            //         this.color = color
+            //         this.index=index
+            //     }
+            //     update(micInput) {
+            //         const sound= micInput * 1000
+            //         if(sound>this.height){
+            //             this.height=sound
+            //         }else{
+            //             this.height -= this.height * 0.05
+            //         }
+            //     }
+            //     draw(context, volume) {
+            //         context.fillStyle = this.color
+            //         context.strokeStyle = this.color
+            //         context.fillRect(this.x,this.y,this.width,this.height)
+
+
+            //     }
+            // }
+
+            // class Microphone {
+            //     constructor(fftSize) {
+            //         this.initialized = false
+            //         navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream){
+            //             this.audioContext = new AudioContext()
+            //             this.microphone = this.audioContext.createMediaStreamSource(stream)
+            //             this.analyser = this.audioContext.createAnalyser()
+            //             this.analyser.fftSize = fftSize
+            //             const bufferlength = this.analyser.frequencyBinCount
+
+            //             this.dataArray = new Uint8Array(bufferlength)
+            //             this.microphone.connect(this.analyser)
+            //             this.initialized = true
+            //         }.bind(this)).catch(error => alert(error))
+            //     }
+
+            //     getSample(){
+            //         this.analyser.getByteTimeDomainData(this.dataArray)
+            //         // let normSamples = [...this.dataArray].map(e => e / 128 - 1)
+            //         return this.dataArray
+            //     }
+            //     getVol(){
+            //         this.analyser.getByteTimeDomainData(this.dataArray)
+            //             let normSamples = [...this.dataArray].map(e => e / 128 - 1)
+            //             let sum = 0
+                      
+            //             for (let i = 0; i < normSamples.length; i++) {
+            //                 sum += normSamples[i] * normSamples[i]
+            //             }
+            //             let volume = Math.sqrt(sum / normSamples.length)
+            //             return volume
+            //     }
+
+            // }
+
+            const audioContext = new AudioContext()
+            const analyserNode =new AnalyserNode(audioContext,{fftSize:256})
+ 
+            // let fftSize = 256
+            // microphone()
+
+            
+                  navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream){
+
+                      const microphone= audioContext.createMediaStreamSource(stream)
+                    //   if (audioContext.state==='suspended') {
+                    //             audioContext.resume()
+                    //   }
+                   //    const analyser = audioContext.createAnalyser()
+                   //    analyser.fftSize=fftSize
+                   microphone.connect(analyserNode)
+                   // microphone.connect(analyser)
+                  })
+                   
+                  
+                  function animate() {
+                      // const data = microphone(fftSize)
+                const bufferlength = analyserNode.frequencyBinCount
+                const dataArray=new Uint8Array(bufferlength)
+                analyserNode.getByteTimeDomainData(dataArray)
+                console.log([...dataArray])
+                
+                let barWidth = (canvas.width )/ (128)
+                    let normSamples = [...dataArray].map(e => e / 128 - 1)
+                    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+                    // let samples = microphone.getSample()
+                    ctx.fillStyle = 'white'
+                    normSamples.forEach((item, index) => {
+                        let barHeight = item*1000
+                        ctx.save()
+                        ctx.beginPath()
+ 
+                        // ctx.translate(canvas.width/2,canvas.height/2)
+                        // ctx.rotate(index)
+
+                        // ctx.moveTo(0,0)
+                        // ctx.lineTo(100,index*50)
+                        ctx.fillRect(0, 0, 10, barHeight)
+                        
+                        // ctx.restore()
+                    })
+                    requestAnimationFrame(animate)
+                }
+                animate()
+        }
+        </script>
+</body>
+
+</html>

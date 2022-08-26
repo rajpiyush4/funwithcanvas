@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: hsl(0, 0%, 12%);
+            overflow: hidden;
+        }
+
+        #container{
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 2px 2px 5px black inset;
+            z-index: 2;
+        }
+
+        #canvas {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            transform: translate(12%,12%);
+            /* background-color: pink; */
+            
+        }
+        #ball{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: blueviolet;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="ball"></div>
+    <div id="container"></div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        window.onload = ()=>{
+        const $ = document.querySelector.bind(document)
+        const $All = document.querySelectorAll.bind(document)
+        const container = $('#container')
+        const ball = $('#ball')
+        const canvas = $('#canvas')
+        const ctx = canvas.getContext('2d')
+        canvas.width = 200
+        canvas.height = 200
+
+        const mouse = {
+            x: canvas.width/2,
+            y: canvas.height/2
+        }
+        const ballPos = {
+            x: 0,
+            y: 0
+        }
+
+        // container.onmousemove=(e)=>{
+           
+        //     ballPos.x
+        //     ball.style = `top: ${ballPos.y}; left: ${ballPos.x}`
+        // }
+
+        
+        onmousemove=(e)=>{
+            if (e.target == container) {
+                mouse.x = e.offsetX + 30
+                mouse.y = e.offsetY + 30
+                if(mouse.x < 104 && mouse.y< 104){
+                ballPos.x -=5
+                ballPos.y -=5
+                console.log(ballPos.x,ballPos.y)
+                }else{
+
+                    ballPos.x += e.offsetX / 50
+                    ballPos.y += e.offsetY/50
+
+                }
+                ball.style = `top: ${ballPos.y}px; left: ${ballPos.x}px`
+                // console.log(mouse.x,mouse.y)
+            }
+            else  {
+                mouse.x =canvas.width/2
+                mouse.y = canvas.height/2
+            }
+
+            
+        }
+    
+
+        
+        function animate() {
+            ctx.beginPath()
+            ctx.fillStyle= 'hsla(0, 0%, 12%,30%)'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.closePath()
+            ctx.beginPath()
+
+            // ctx.save()
+            // ctx.translate(canvas.width-90, canvas.height - 115)
+            ctx.fillStyle = 'white'
+            ctx.arc((mouse.x), mouse.y, 20, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.closePath()
+            // ctx.restore()
+            requestAnimationFrame(animate)
+        }
+        animate()
+
+        window.addEventListener('resize', () => {
+            canvas.width = 200
+            canvas.height = 200
+        })
+    }
+    </script>
+</body>
+
+</html>

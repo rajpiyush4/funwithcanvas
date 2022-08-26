@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AV with audio</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+      
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <audio id="audio1" controls></audio>
+    </div>
+    <script>
+        const container = document.querySelector("#container")
+        const canvas = document.querySelector("#canvas")
+        const ctx = canvas.getContext('2d')
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        let audioSource
+        let analyser
+
+        container.onclick = () => {
+            let audio1 = document.querySelector("#audio1")
+            audio1.src = './Tu_hai_ki_nahi_whistle_ringtone___Desi_Creation_Studio(128k).m4a'
+            const audioctx = new AudioContext()
+            audio1.play()
+            audioSource = audioctx.createMediaElementSource(audio1);
+            analyser = audioctx.createAnalyser();
+            audioSource.connect(analyser);
+            analyser.connect(audioctx.destination);
+            analyser.fftSize =512;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            const barWidth = 15;
+            let barHeight
+             
+            function animate() {
+            let x = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            analyser.getByteFrequencyData(dataArray)
+            drawVisualizer(bufferLength, x, barWidth, barHeight,dataArray)
+            requestAnimationFrame(animate)
+        }
+        animate()
+
+        function drawVisualizer(bufferLength, x, barWidth, barHeight,dataArray) {
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] * 3.5
+                    ctx.save()
+                    ctx.translate(canvas.width/2,canvas.height/2)
+                    ctx.rotate(i *2)
+                    const hue = i * 2; 
+                    ctx.fillStyle =
+                     `hsl(${hue},100%,${barHeight/3}%)`
+                    ctx.fillRect(i,0,barWidth,barHeight)
+                    // ctx.arc(i*2,barWidth/2,barHeight/2,0,Math.PI * barWidth)
+                    // ctx.stroke()
+                    ctx.fill()
+                    x += barWidth;
+                    ctx.restore()
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

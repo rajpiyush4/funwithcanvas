@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    #canvas {
+      width: 100%;
+      height: 100%;
+      background: black;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!DOCTYPE html>
+  <html>
+
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+
+  </html>
+  <script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    ctx.fillStyle = 'white'
+    ctx.font = '20px Monospace'
+    ctx.fillText('F', 0, 20)
+    const textCoordinate = ctx.getImageData(0, 0, 100, 100)
+
+    let particleArray = [];
+    let adjustX = 0
+    let adjustY = 0
+
+    let mouse = {
+      x: null,
+      y: null,
+      radius: 100
+    };
+
+    onmousemove = (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
+
+    };
+
+
+    class Particles {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.baseX = this.x
+        this.baseY = this.y
+        this.size = Math.random() * 3;
+        this.speed = Math.random() * 5;
+        this.density = (Math.random() * 30) + 1;
+
+      }
+
+      draw() {
+        // ctx.clearRect(0,0,canvas.width,canvas.height)
+        ctx.beginPath();
+        ctx.fillStyle = 'white'
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath()
+        ctx.strokeStyle = 'white'
+        ctx.stroke();
+        ctx.fill()
+
+      }
+      update() {
+        let dx = this.x - mouse.x
+        let dy = this.y - mouse.y
+        let distance = Math.sqrt(dx * dx + dy * dy)
+        let forceX = dx / distance
+        let forceY = dy / distance
+        let maxDistance = mouse.radius
+        let force = (maxDistance - distance) / maxDistance
+        let directionX = forceX * force * this.density
+        let directionY = forceY * force * this.density
+
+
+        if (distance < mouse.radius) {
+          this.x += directionX
+          this.y += directionY
+        }
+        else {
+          if (this.x !== this.baseX) {
+            let dx = this.x - this.baseX
+            this.x -= dx / 10
+          }
+          if (this.y !== this.baseY) {
+            let dy = this.y - this.baseY
+            this.y -= dy / 10
+          }
+        }
+      }
+    }
+
+    // console.log(textCoordinate.width)
+
+    function init() {
+      // for (let i = 0; i < 1000; i++) {
+      //     let x = Math.random()*1000
+      //     let y = Math.random()*1000
+      //     particleArray.push(new Particles(x , y))
+      // }
+      for (let y = 0, y2 = textCoordinate.height; y < y2; y++) {
+        for (let x = 0, x2 = textCoordinate.width; x < x2; x++) {
+          if (textCoordinate.data[(y * 4 * textCoordinate.width) + (x * 4) + 3] > 128) {
+            let positionX = x + adjustX;
+            let positionY = y + adjustY;
+            particleArray.push(new Particles(positionX * 20, positionY * 20))
+          }
+        }
+
+      }
+    }
+    init()
+
+    function handleParticle() {
+      for (let i = 0; i < particleArray.length; i++) {
+        particleArray[i].update()
+        particleArray[i].draw()
+      }
+    }
+
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      handleParticle()
+      // connect()
+      requestAnimationFrame(animate);
+    }
+    animate()
+
+    function connect() {
+      for (let a = 0; a < particleArray.length; a++) {
+        for (let b = a; b < particleArray.length; b++) {
+          let dx = particleArray[a].x - particleArray[b].x
+          let dy = particleArray[a].y- particleArray[b].y
+          let distance = Math.sqrt(dx * dx + dy * dy)
+
+          if (distance<50) {
+            ctx.strokeStyle='white'
+            ctx.lineWidth=2
+            ctx.beginPath()
+            ctx.moveTo(particleArray[a].x,particleArray[a].y)
+            ctx.lineTo(particleArray[b].x , particleArray[b].y)
+            ctx.stroke()
+          }
+
+        }
+
+      }
+    }
+
+  </script>
+</body>
+
+</html>

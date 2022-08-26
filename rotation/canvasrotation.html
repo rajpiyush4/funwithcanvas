@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>halloween</title>
+    <style>
+        #canvas{
+            position: absolute;
+            background: blue;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+    <script>
+           const canvas=document.querySelector('#canvas')
+           const ctx=canvas.getContext('2d');
+           canvas.width=window.innerWidth
+           canvas.height=window.innerHeight
+           const numOfParticles=50;
+           let particleArray=[]
+           const pumpkin=new Image()
+           pumpkin.src='./pumpkin.svg';
+
+        //    ctx.translate(50,50)
+        //    ctx.rotate(60 * Math.PI/360)
+        //    ctx.fillRect(0,0,40,80)
+        //    ctx.fillRect(50,50,40,40)
+           
+
+           class Particle {
+               constructor(){
+                   this.x=Math.random()*canvas.width;
+                   this.y=Math.random()*canvas.height
+                   this.size=Math.random()*10 + 40;
+                   this.speed=Math.random()*5 + 1 
+                   this.angle=Math.random()*360;
+                   this.spin=Math.random() < 0.5 ? -1 : 1;
+               } 
+               draw(){
+                //    ctx.fillRect(this.x,this.y,this.size,this.size)
+                   ctx.save();
+                   ctx.translate(this.x,this.y);
+                   ctx.rotate(this.angle * Math.PI/360 * this.spin)
+                //    ctx.fillStyle='red'
+                //    ctx.fillRect(0,0,canvas.width,canvas.height)
+                   ctx.drawImage(pumpkin,0-this.size/2,0-this.size/2,this.size,this.size) 
+                   ctx.restore()
+               }
+               update(){
+                   this.angle++;
+                   if (this.y>canvas.height) {
+                       this.y=0-this.size
+                       this.x=Math.random()*canvas.width;
+                       this.size=Math.random()*20 + 50;
+                       this.speed=Math.random()*7 + 1 
+                    
+                   }
+
+                //    if (this.x>canvas.width || this.x<canvas.width) {
+                //        this.x=0-this.size
+                //    }
+
+                   this.y+=this.speed;
+               }
+  
+           }
+   
+           function init(){
+               for (let i = 0; i < numOfParticles; i++) {
+                   particleArray.push(new Particle()) 
+               }
+           }
+           init()
+
+           function animate(){
+               ctx.clearRect(0,0,canvas.width,canvas.height)
+               for (let i = 0; i < particleArray.length; i++) {
+                   particleArray[i].draw()
+                  particleArray[i].update()
+                   
+               }
+               requestAnimationFrame(animate)
+           }
+           animate()
+
+    </script>
+</body>
+</html>

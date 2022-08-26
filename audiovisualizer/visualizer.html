@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>visualizer</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #212121;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #audio1 {
+            width: 50%;
+            margin: 50px auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <audio id="audio1" controls></audio>
+    </div>
+</body>
+<script>
+
+    const container = document.querySelector("#container")
+    const canvas = document.querySelector('#canvas')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    const ctx = canvas.getContext("2d")
+    let audioSource
+    let analyser
+  
+
+
+</script>
+
+</html>
